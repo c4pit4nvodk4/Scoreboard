@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Marcador de Fútbol - Patagonia Sport</title>
+<link rel="icon" type="image/png" href="https://c4pit4nvodk4.github.io/TvRegionalMagallanes/CanalPatagoniaSport.png">
+<style>
+  :root{
+    --fondo: #00cc00;
+    --gris-oscuro: #1f1f1f;
+    --azul-oscuro: #0b3b66;
+    --blanco: #ffffff;
+    --radio: 8px;
+  }
+  html,body{
+    height:100%;
+    margin:0;
+    font-family:"Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--fondo);
+    color: var(--blanco);
+  }
+  .container{
+    min-height:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:18px;
+    box-sizing:border-box;
+  }
+  .scoreboard{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-top:12px;
+    flex-wrap:wrap;
+    justify-content:center;
+    position:relative;
+  }
+  .clock{
+    background:var(--gris-oscuro);
+    font-weight:700;
+    font-size:36px;
+    min-width:160px;
+    text-align:center;
+    padding:10px 14px;
+    border-radius:var(--radio);
+    position:relative;
+  }
+  #periodLabel {
+    position:absolute;
+    left:5px;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:40px;
+    font-weight:700;
+    color:white;
+    -webkit-text-stroke: 0px black;
+    text-shadow:1px 1px 2px black;
+    text-transform:uppercase;
+  }
+  .team-name{
+    background:var(--azul-oscuro);
+    color:var(--blanco);
+    font-weight:700;
+    font-size:26px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 12px;
+    border-radius:var(--radio);
+    min-width:120px;
+    flex-direction:row;
+  }
+  .team-name img{
+    width:40px;
+    height:40px;
+    object-fit:contain;
+    border-radius:4px;
+    background:#ffffff20;
+  }
+  .editable{
+    outline:none;
+    min-width:40px;
+    text-align:left;
+    direction:ltr;
+    color:var(--blanco);
+    text-transform:uppercase;
+  }
+  .score{
+    background:var(--gris-oscuro);
+    font-weight:700;
+    font-size:40px;
+    padding:8px 18px;
+    border-radius:6px;
+    min-width:140px;
+    text-align:center;
+  }
+  .controls{
+    display:flex;
+    justify-content:space-between;
+    width:100%;
+    max-width:900px;
+    margin-top:25px;
+  }
+  .column{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .controls button{
+    background:var(--gris-oscuro);
+    color:var(--blanco);
+    border:none;
+    padding:10px 14px;
+    border-radius:8px;
+    font-weight:700;
+    cursor:pointer;
+    min-width:160px;
+  }
+  .controls button:active{transform:translateY(1px);}
+  .footer{
+    margin-top:30px;
+    text-align:center;
+    color:white;
+  }
+  .footer img{
+    width:32px;
+    height:32px;
+    margin:0 5px;
+    vertical-align:middle;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="scoreboard">
+    <div class="clock" id="clockContainer">
+      <div id="periodLabel"></div>
+      <span id="clockDisplay">00:00</span>
+    </div>
+    <div class="panel-box team-name" id="teamABox">
+      <img id="logoA" src="" alt="Logo A" hidden>
+      <span class="editable" id="teamAName" contenteditable="true">A</span>
+    </div>
+    <div class="panel-box score" id="scoreDisplay">0 - 0</div>
+    <div class="panel-box team-name" id="teamBBox">
+      <span class="editable" id="teamBName" contenteditable="true">B</span>
+      <img id="logoB" src="" alt="Logo B" hidden>
+    </div>
+  </div>
+  <div class="controls">
+    <div class="column">
+      <button id="startClock">Iniciar Reloj</button>
+      <button id="stopClock">Detener Reloj</button>
+      <button id="resetClock">Reiniciar Reloj</button>
+      <button id="togglePeriod">Segundo Tiempo</button>
+    </div>
+    <div class="column">
+      <button id="logoUploadA">Agregar Logo Equipo A</button>
+      <button id="addGoalA">Agregar Gol Equipo A</button>
+      <button id="removeGoalA">Quitar Gol Equipo A</button>
+    </div>
+    <div class="column">
+      <button id="logoUploadB">Agregar Logo Equipo B</button>
+      <button id="addGoalB">Agregar Gol Equipo B</button>
+      <button id="removeGoalB">Quitar Gol Equipo B</button>
+    </div>
+  </div>
+  <input type="file" id="fileInputA" accept="image/png" hidden>
+  <input type="file" id="fileInputB" accept="image/png" hidden>
+  <div class="footer">
+    <p><b>Instrucciones básicas:</b> Usa los botones para iniciar, detener o reiniciar el reloj. 
+    Agrega o quita goles, sube los logos de los equipos, y cambia entre primer y segundo tiempo. <br><br>
+    Marcador de Fútbol de <b>Patagonia Sport</b><br>
+    <a href="https://www.facebook.com/p/Canal-Patagonia-Sport-100063641199967/?locale=es_LA" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png"></a>
+    <a href="https://www.youtube.com/@canalpatagoniasport" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png"></a>
+    <a href="https://www.instagram.com/canalpatagoniasport/" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/1384/1384063.png"></a>
+    </p>
+  </div>
+</div>
+
+<script>
+let secondsElapsed = 0;
+let timer = null;
+let running = false;
+let goalsA = 0;
+let goalsB = 0;
+let secondHalf = false;
+
+const clockDisplay = document.getElementById('clockDisplay');
+const scoreDisplay = document.getElementById('scoreDisplay');
+const teamAName = document.getElementById('teamAName');
+const teamBName = document.getElementById('teamBName');
+const logoA = document.getElementById('logoA');
+const logoB = document.getElementById('logoB');
+const fileInputA = document.getElementById('fileInputA');
+const fileInputB = document.getElementById('fileInputB');
+const periodLabel = document.getElementById('periodLabel');
+
+function formatTime(t){const m=String(Math.floor(t/60)).padStart(2,'0');const s=String(t%60).padStart(2,'0');return m+':'+s;}
+function updateClock(){clockDisplay.textContent=formatTime(secondsElapsed);}
+function startClock(){if(running)return;running=true;timer=setInterval(()=>{secondsElapsed++;updateClock();},1000);}
+function stopClock(){running=false;clearInterval(timer);}
+function resetClock(){stopClock();secondsElapsed=0;updateClock();}
+function updateScore(){scoreDisplay.textContent=`${goalsA} - ${goalsB}`;}
+
+document.getElementById('startClock').onclick=startClock;
+document.getElementById('stopClock').onclick=stopClock;
+document.getElementById('resetClock').onclick=resetClock;
+document.getElementById('addGoalA').onclick=()=>{goalsA++;updateScore();};
+document.getElementById('removeGoalA').onclick=()=>{goalsA=Math.max(0,goalsA-1);updateScore();};
+document.getElementById('addGoalB').onclick=()=>{goalsB++;updateScore();};
+document.getElementById('removeGoalB').onclick=()=>{goalsB=Math.max(0,goalsB-1);updateScore();};
+
+document.getElementById('togglePeriod').onclick=()=>{
+  secondHalf=!secondHalf;
+  periodLabel.textContent = secondHalf ? "2°" : "";
+};
+
+function limitName(el){
+  let t=el.textContent.replace(/\s+/g,'').toUpperCase();
+  if(t.length>4)t=t.slice(0,4);
+  el.textContent=t;
+}
+[teamAName,teamBName].forEach(el=>{
+  el.addEventListener('input',()=>limitName(el));
+  el.addEventListener('blur',()=>limitName(el));
+  el.addEventListener('keydown',e=>{if(e.key==='Enter')e.preventDefault();});
+});
+
+document.getElementById('logoUploadA').onclick=()=>fileInputA.click();
+document.getElementById('logoUploadB').onclick=()=>fileInputB.click();
+
+fileInputA.onchange=e=>{
+  const f=e.target.files[0];
+  if(f&&f.type==='image/png'){
+    const r=new FileReader();
+    r.onload=ev=>{logoA.src=ev.target.result;logoA.hidden=false;};
+    r.readAsDataURL(f);
+  }
+};
+fileInputB.onchange=e=>{
+  const f=e.target.files[0];
+  if(f&&f.type==='image/png'){
+    const r=new FileReader();
+    r.onload=ev=>{logoB.src=ev.target.result;logoB.hidden=false;};
+    r.readAsDataURL(f);
+  }
+};
+
+updateClock();
+updateScore();
+</script>
+</body>
+</html>
