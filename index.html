@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Marcador de Fútbol - Patagonia Sport</title>
-<link rel="icon" type="image/png" href="https://c4pit4nvodk4.github.io/Scoreboard/CanalPatagoniaSport.png">
+<link rel="icon" type="image/png" href="https://c4pit4nvodk4.github.io/TvRegionalMagallanes/CanalPatagoniaSport.png">
 <style>
   :root{
     --fondo: #00cc00;
@@ -55,7 +55,6 @@
     font-size:40px;
     font-weight:700;
     color:white;
-    -webkit-text-stroke: 0px black;
     text-shadow:1px 1px 2px black;
     text-transform:uppercase;
   }
@@ -169,6 +168,7 @@
   </div>
   <input type="file" id="fileInputA" accept="image/png" hidden>
   <input type="file" id="fileInputB" accept="image/png" hidden>
+
   <div class="footer">
     <p><b>Instrucciones básicas:</b> Usa los botones para iniciar, detener o reiniciar el reloj. 
     Agrega o quita goles, sube los logos de los equipos, y cambia entre primer y segundo tiempo. <br><br>
@@ -198,7 +198,11 @@ const fileInputA = document.getElementById('fileInputA');
 const fileInputB = document.getElementById('fileInputB');
 const periodLabel = document.getElementById('periodLabel');
 
-function formatTime(t){const m=String(Math.floor(t/60)).padStart(2,'0');const s=String(t%60).padStart(2,'0');return m+':'+s;}
+function formatTime(t){
+  const m=String(Math.floor(t/60)).padStart(2,'0');
+  const s=String(t%60).padStart(2,'0');
+  return m+':'+s;
+}
 function updateClock(){clockDisplay.textContent=formatTime(secondsElapsed);}
 function startClock(){if(running)return;running=true;timer=setInterval(()=>{secondsElapsed++;updateClock();},1000);}
 function stopClock(){running=false;clearInterval(timer);}
@@ -208,6 +212,7 @@ function updateScore(){scoreDisplay.textContent=`${goalsA} - ${goalsB}`;}
 document.getElementById('startClock').onclick=startClock;
 document.getElementById('stopClock').onclick=stopClock;
 document.getElementById('resetClock').onclick=resetClock;
+
 document.getElementById('addGoalA').onclick=()=>{goalsA++;updateScore();};
 document.getElementById('removeGoalA').onclick=()=>{goalsA=Math.max(0,goalsA-1);updateScore();};
 document.getElementById('addGoalB').onclick=()=>{goalsB++;updateScore();};
@@ -251,6 +256,38 @@ fileInputB.onchange=e=>{
 
 updateClock();
 updateScore();
+
+/* -------------------------------
+      SHORTCUTS AGREGADOS
+--------------------------------*/
+document.addEventListener("keydown", e => {
+  if (e.target.isContentEditable) return; // evitar conflicto escribiendo nombres
+
+  switch (e.key) {
+    case ".": // iniciar reloj
+      startClock();
+      break;
+    case "¿": // detener reloj
+      stopClock();
+      break;
+    case "+": // gol A
+      goalsA++;
+      updateScore();
+      break;
+    case "-": // quitar gol A
+      goalsA = Math.max(0, goalsA - 1);
+      updateScore();
+      break;
+    case "*": // gol B
+      goalsB++;
+      updateScore();
+      break;
+    case "|": // quitar gol B
+      goalsB = Math.max(0, goalsB - 1);
+      updateScore();
+      break;
+  }
+});
 </script>
 </body>
 </html>
