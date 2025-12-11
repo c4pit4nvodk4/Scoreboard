@@ -267,7 +267,7 @@ document.addEventListener("keydown", e => {
     case ".": // iniciar reloj
       startClock();
       break;
-    case "¿": // detener reloj
+    case "¡": // detener reloj
       stopClock();
       break;
     case "+": // gol A
@@ -282,7 +282,7 @@ document.addEventListener("keydown", e => {
       goalsB++;
       updateScore();
       break;
-    case "|": // quitar gol B
+    case "º": // quitar gol B
       goalsB = Math.max(0, goalsB - 1);
       updateScore();
       break;
