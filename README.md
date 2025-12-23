@@ -66,11 +66,6 @@ https://c4pit4nvodk4.github.io/Scoreboard/
 
 ---
 
-## 🌍 English Version
-
-**Scoreboard** is a sports scoreboard developed **100% in HTML**, specially designed for **live streaming** using **OBS Studio**.
-
----
 
 ## 📜 License
 
