@@ -52,6 +52,26 @@ El proyecto es **100% libre**, puedes clonarlo, modificarlo y adaptarlo a tu gus
 3. Selecciona **Navegador**
 4. Ingresa la siguiente URL:
 
-```text
 https://c4pit4nvodk4.github.io/Scoreboard/
 
+5. Configura el tamaño:
+   - **Ancho:** 1280 px  
+   - **Alto:** 720 px  
+
+---
+
+## 📩 Soporte y contacto
+
+📧 **Shuwaka@live.com**
+
+---
+
+## 🌍 English Version
+
+**Scoreboard** is a sports scoreboard developed **100% in HTML**, specially designed for **live streaming** using **OBS Studio**.
+
+---
+
+## 📜 License
+
+This project is **free and open-source**.
