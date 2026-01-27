@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Marcador de Fútbol - Patagonia Sport</title>
-<link rel="icon" type="image/png" href="/CanalPatagoniaSport.png">
+<title>Marcador Profesional Fútbol - Patagonia Sport</title>
+<link rel="icon" type="image/png" href="LogoPS.png">
 
 <style>
 body{
@@ -119,6 +119,16 @@ button{
     border:none;
     border-radius:15px;
     cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+}
+
+button img{
+    width:28px;
+    height:28px;
+    object-fit:contain;
 }
 
 .green{background:#1abc3c;color:white}
@@ -188,6 +198,7 @@ button{
 <!-- ===== CONTROLES ===== -->
 <div class="controls">
 
+    <!-- IZQUIERDA -->
     <div class="control-section">
         <button class="green" onclick="startClock()">Iniciar Reloj</button>
         <button class="yellow" onclick="pauseClock()">Pausar Reloj</button>
@@ -195,18 +206,36 @@ button{
         <button class="blue" onclick="toggleSecondTime()">2° Tiempo</button>
     </div>
 
+    <!-- CENTRO -->
     <div class="control-section">
         <button class="white" onclick="uploadLogo('A')">Logo Equipo A</button>
         <button class="black" onclick="openModal('A')">Nombre Equipo A</button>
-        <button class="green" onclick="goal('A',1)">Gol Equipo A</button>
-        <button class="red" onclick="goal('A',-1)">Quitar Gol Equipo A</button>
+
+        <button class="green" onclick="goal('A',1)">
+            Gol Equipo A
+            <img id="btnLogoA1">
+        </button>
+
+        <button class="red" onclick="goal('A',-1)">
+            Quitar Gol Equipo A
+            <img id="btnLogoA2">
+        </button>
     </div>
 
+    <!-- DERECHA -->
     <div class="control-section">
         <button class="white" onclick="uploadLogo('B')">Logo Equipo B</button>
         <button class="black" onclick="openModal('B')">Nombre Equipo B</button>
-        <button class="green" onclick="goal('B',1)">Gol Equipo B</button>
-        <button class="red" onclick="goal('B',-1)">Quitar Gol Equipo B</button>
+
+        <button class="green" onclick="goal('B',1)">
+            Gol Equipo B
+            <img id="btnLogoB1">
+        </button>
+
+        <button class="red" onclick="goal('B',-1)">
+            Quitar Gol Equipo B
+            <img id="btnLogoB2">
+        </button>
     </div>
 
 </div>
@@ -256,11 +285,8 @@ function resetClock(){
 }
 
 function toggleSecondTime(){
-    if(secondTime.style.display==="block"){
-        secondTime.style.display="none";
-    }else{
-        secondTime.style.display="block";
-    }
+    secondTime.style.display =
+        secondTime.style.display==="block" ? "none" : "block";
 }
 
 function goal(team,val){
@@ -281,8 +307,17 @@ function uploadLogo(team){
     input.type="file";
     input.accept="image/*";
     input.onchange=e=>{
-        let img=document.getElementById(team==="A"?"logoA":"logoB");
-        img.src=URL.createObjectURL(e.target.files[0]);
+        let src=URL.createObjectURL(e.target.files[0]);
+
+        document.getElementById(team==="A"?"logoA":"logoB").src=src;
+
+        if(team==="A"){
+            btnLogoA1.src=src;
+            btnLogoA2.src=src;
+        }else{
+            btnLogoB1.src=src;
+            btnLogoB2.src=src;
+        }
     };
     input.click();
 }
