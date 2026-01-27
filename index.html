@@ -1,293 +1,315 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Marcador de Fútbol - Patagonia Sport</title>
-<link rel="icon" type="image/png" href="https://c4pit4nvodk4.github.io/TvRegionalMagallanes/CanalPatagoniaSport.png">
+<link rel="icon" type="image/png" href="/CanalPatagoniaSport.png">
+
 <style>
-  :root{
-    --fondo: transparent;
-    --gris-oscuro: #1f1f1f;
-    --azul-oscuro: #0b3b66;
-    --blanco: #ffffff;
-    --radio: 8px;
-  }
-  html,body{
-    height:100%;
+body{
     margin:0;
-    font-family:"Segoe UI", Roboto, Arial, sans-serif;
-    background: var(--fondo);
-    color: var(--blanco);
-  }
-  .container{
-    min-height:100%;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    padding:18px;
-    box-sizing:border-box;
-  }
-  .scoreboard{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    margin-top:12px;
-    flex-wrap:wrap;
-    justify-content:center;
-    position:relative;
-  }
-  .clock{
-    background:var(--gris-oscuro);
-    font-weight:700;
-    font-size:36px;
-    min-width:160px;
-    text-align:center;
-    padding:10px 14px;
-    border-radius:var(--radio);
-    position:relative;
-  }
-  #periodLabel {
-    position:absolute;
-    left:5px;
-    top:50%;
-    transform:translateY(-50%);
-    font-size:40px;
-    font-weight:700;
+    background:#111;
     color:white;
-    text-shadow:1px 1px 2px black;
-    text-transform:uppercase;
-  }
-  .team-name{
-    background:var(--azul-oscuro);
-    color:var(--blanco);
-    font-weight:700;
-    font-size:26px;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+/* ===== MARCADOR ===== */
+.scoreboard-container{
+    display:flex;
+    justify-content:center;
+    margin-top:30px;
+}
+
+.scoreboard{
     display:flex;
     align-items:center;
-    gap:8px;
-    padding:8px 12px;
-    border-radius:var(--radio);
-    min-width:120px;
-    flex-direction:row;
-  }
-  .team-name img{
-    width:40px;
-    height:40px;
+    gap:15px;
+    padding:20px 30px;
+    border-radius:25px;
+    background:linear-gradient(270deg,#00a7ff,#0049ee);
+    background-size:400% 400%;
+    animation:gradientMove 12s ease infinite alternate;
+}
+
+@keyframes gradientMove{
+    0%{background-position:0% 50%}
+    100%{background-position:100% 50%}
+}
+
+.scoreboard img{
+    width:70px;
+    height:70px;
     object-fit:contain;
-    border-radius:4px;
-    background:#ffffff20;
-  }
-  .editable{
-    outline:none;
-    min-width:40px;
-    text-align:left;
-    direction:ltr;
-    color:var(--blanco);
-    text-transform:uppercase;
-  }
-  .score{
-    background:var(--gris-oscuro);
-    font-weight:700;
-    font-size:40px;
-    padding:8px 18px;
-    border-radius:6px;
-    min-width:140px;
-    text-align:center;
-  }
-  .controls{
+}
+
+.text-team{
+    font-size:48px;
+    font-weight:bold;
+}
+
+.separator{
+    font-size:48px;
+    font-weight:bold;
+}
+
+.clock{
+    font-size:52px;
+    font-weight:bold;
+}
+
+.score{
+    font-size:52px;
+    font-weight:bold;
+}
+
+/* ===== ANIMACIÓN DE GOL ===== */
+@keyframes goalPop {
+    0% { transform: scale(1); color:white; }
+    50% { transform: scale(1.4); color:#00ff99; }
+    100% { transform: scale(1); color:white; }
+}
+
+.goal-animate{
+    animation:goalPop 0.4s ease;
+}
+
+/* ===== 2° TIEMPO ===== */
+.second-time-box{
+    margin-top:10px;
+    margin-left:20px;
+    padding:10px 18px;
+    border-radius:15px;
+    background:linear-gradient(270deg,#00a7ff,#0049ee);
+    display:none;
+    animation:fadeIn 1s ease forwards;
+    font-size:28px;
+    font-weight:bold;
+    width:fit-content;
+    white-space:nowrap;
+}
+
+@keyframes fadeIn{
+    from{opacity:0}
+    to{opacity:1}
+}
+
+/* ===== CONTROLES ===== */
+.controls{
+    position:fixed;
+    bottom:20px;
+    left:20px;
+    right:20px;
     display:flex;
     justify-content:space-between;
-    width:100%;
-    max-width:900px;
-    margin-top:25px;
-  }
-  .column{
+    gap:20px;
+}
+
+.control-section{
+    flex:1;
     display:flex;
     flex-direction:column;
-    gap:10px;
-  }
-  .controls button{
-    background:var(--gris-oscuro);
-    color:var(--blanco);
+    gap:15px;
+}
+
+button{
+    padding:18px;
+    font-size:22px;
+    font-weight:bold;
     border:none;
-    padding:10px 14px;
-    border-radius:8px;
-    font-weight:700;
+    border-radius:15px;
     cursor:pointer;
-    min-width:160px;
-  }
-  .controls button:active{transform:translateY(1px);}
-  .footer{
-    margin-top:30px;
+}
+
+.green{background:#1abc3c;color:white}
+.yellow{background:#f1c40f;color:black}
+.red{background:#e74c3c;color:white}
+.blue{background:#3498db;color:white}
+.black{background:black;color:white}
+.white{background:white;color:black}
+
+/* ===== MODAL ===== */
+.modal{
+    position:fixed;
+    top:0;left:0;
+    width:100%;height:100%;
+    background:rgba(0,0,0,0.7);
+    display:none;
+    justify-content:center;
+    align-items:center;
+}
+
+.modal-content{
+    background:#222;
+    padding:30px;
+    border-radius:20px;
     text-align:center;
-    color:white;
-  }
-  .footer img{
-    width:32px;
-    height:32px;
-    margin:0 5px;
-    vertical-align:middle;
-  }
+}
+
+.modal-content h2{
+    font-size:28px;
+}
+
+.modal-content input{
+    margin-top:15px;
+    padding:10px;
+    font-size:22px;
+    width:200px;
+    text-transform:uppercase;
+    text-align:center;
+}
 </style>
 </head>
-<body>
-<div class="container">
-  <div class="scoreboard">
-    <div class="clock" id="clockContainer">
-      <div id="periodLabel"></div>
-      <span id="clockDisplay">00:00</span>
-    </div>
-    <div class="panel-box team-name" id="teamABox">
-      <img id="logoA" src="" alt="Logo A" hidden>
-      <span class="editable" id="teamAName" contenteditable="true">A</span>
-    </div>
-    <div class="panel-box score" id="scoreDisplay">0 - 0</div>
-    <div class="panel-box team-name" id="teamBBox">
-      <span class="editable" id="teamBName" contenteditable="true">B</span>
-      <img id="logoB" src="" alt="Logo B" hidden>
-    </div>
-  </div>
-  <div class="controls">
-    <div class="column">
-      <button id="startClock">Iniciar Reloj</button>
-      <button id="stopClock">Detener Reloj</button>
-      <button id="resetClock">Reiniciar Reloj</button>
-      <button id="togglePeriod">Segundo Tiempo</button>
-    </div>
-    <div class="column">
-      <button id="logoUploadA">Agregar Logo Equipo A</button>
-      <button id="addGoalA">Agregar Gol Equipo A</button>
-      <button id="removeGoalA">Quitar Gol Equipo A</button>
-    </div>
-    <div class="column">
-      <button id="logoUploadB">Agregar Logo Equipo B</button>
-      <button id="addGoalB">Agregar Gol Equipo B</button>
-      <button id="removeGoalB">Quitar Gol Equipo B</button>
-    </div>
-  </div>
-  <input type="file" id="fileInputA" accept="image/png" hidden>
-  <input type="file" id="fileInputB" accept="image/png" hidden>
 
-  <div class="footer">
-    <p><b>Instrucciones básicas:</b> Usa los botones para iniciar, detener o reiniciar el reloj. 
-    Agrega o quita goles, sube los logos de los equipos, y cambia entre primer y segundo tiempo. <br><br>
-    Marcador de Fútbol de <b>Patagonia Sport</b><br>
-    <a href="https://www.facebook.com/p/Canal-Patagonia-Sport-100063641199967/?locale=es_LA" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png"></a>
-    <a href="https://www.youtube.com/@canalpatagoniasport" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png"></a>
-    <a href="https://www.instagram.com/canalpatagoniasport/" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/1384/1384063.png"></a>
-    </p>
-  </div>
+<body>
+
+<!-- ===== MARCADOR ===== -->
+<div class="scoreboard-container">
+    <div>
+        <div class="scoreboard">
+            <div class="clock" id="clock">00:00</div>
+            <div class="separator">|</div>
+
+            <img id="logoA" src="" alt="">
+            <div class="text-team" id="nameA">AAAA</div>
+
+            <div class="separator">|</div>
+            <div class="score"><span id="goalA">0</span> - <span id="goalB">0</span></div>
+            <div class="separator">|</div>
+
+            <div class="text-team" id="nameB">BBBB</div>
+            <img id="logoB" src="" alt="">
+        </div>
+
+        <div class="second-time-box" id="secondTime">2° Tiempo</div>
+    </div>
+</div>
+
+<!-- ===== CONTROLES ===== -->
+<div class="controls">
+
+    <div class="control-section">
+        <button class="green" onclick="startClock()">Iniciar Reloj</button>
+        <button class="yellow" onclick="pauseClock()">Pausar Reloj</button>
+        <button class="red" onclick="resetClock()">Reiniciar Reloj</button>
+        <button class="blue" onclick="toggleSecondTime()">2° Tiempo</button>
+    </div>
+
+    <div class="control-section">
+        <button class="white" onclick="uploadLogo('A')">Logo Equipo A</button>
+        <button class="black" onclick="openModal('A')">Nombre Equipo A</button>
+        <button class="green" onclick="goal('A',1)">Gol Equipo A</button>
+        <button class="red" onclick="goal('A',-1)">Quitar Gol Equipo A</button>
+    </div>
+
+    <div class="control-section">
+        <button class="white" onclick="uploadLogo('B')">Logo Equipo B</button>
+        <button class="black" onclick="openModal('B')">Nombre Equipo B</button>
+        <button class="green" onclick="goal('B',1)">Gol Equipo B</button>
+        <button class="red" onclick="goal('B',-1)">Quitar Gol Equipo B</button>
+    </div>
+
+</div>
+
+<!-- ===== MODAL ===== -->
+<div class="modal" id="modal">
+    <div class="modal-content">
+        <h2 id="modalTitle"></h2>
+
+        <img id="modalLogo" style="
+            width:100px;
+            height:100px;
+            object-fit:contain;
+            margin:15px 0;
+            display:none;
+        ">
+
+        <input maxlength="4" id="teamInput">
+        <br><br>
+        <button class="blue" onclick="saveName()">Aceptar</button>
+    </div>
 </div>
 
 <script>
-let secondsElapsed = 0;
-let timer = null;
-let running = false;
-let goalsA = 0;
-let goalsB = 0;
-let secondHalf = false;
+let seconds=0,interval=null;
+let editingTeam="A";
 
-const clockDisplay = document.getElementById('clockDisplay');
-const scoreDisplay = document.getElementById('scoreDisplay');
-const teamAName = document.getElementById('teamAName');
-const teamBName = document.getElementById('teamBName');
-const logoA = document.getElementById('logoA');
-const logoB = document.getElementById('logoB');
-const fileInputA = document.getElementById('fileInputA');
-const fileInputB = document.getElementById('fileInputB');
-const periodLabel = document.getElementById('periodLabel');
-
-function formatTime(t){
-  const m=String(Math.floor(t/60)).padStart(2,'0');
-  const s=String(t%60).padStart(2,'0');
-  return m+':'+s;
+function startClock(){
+    if(interval) return;
+    interval=setInterval(()=>{
+        seconds++;
+        let m=String(Math.floor(seconds/60)).padStart(2,'0');
+        let s=String(seconds%60).padStart(2,'0');
+        clock.innerText=`${m}:${s}`;
+    },1000);
 }
-function updateClock(){clockDisplay.textContent=formatTime(secondsElapsed);}
-function startClock(){if(running)return;running=true;timer=setInterval(()=>{secondsElapsed++;updateClock();},1000);}
-function stopClock(){running=false;clearInterval(timer);}
-function resetClock(){stopClock();secondsElapsed=0;updateClock();}
-function updateScore(){scoreDisplay.textContent=`${goalsA} - ${goalsB}`;}
 
-document.getElementById('startClock').onclick=startClock;
-document.getElementById('stopClock').onclick=stopClock;
-document.getElementById('resetClock').onclick=resetClock;
-
-document.getElementById('addGoalA').onclick=()=>{goalsA++;updateScore();};
-document.getElementById('removeGoalA').onclick=()=>{goalsA=Math.max(0,goalsA-1);updateScore();};
-document.getElementById('addGoalB').onclick=()=>{goalsB++;updateScore();};
-document.getElementById('removeGoalB').onclick=()=>{goalsB=Math.max(0,goalsB-1);updateScore();};
-
-document.getElementById('togglePeriod').onclick=()=>{
-  secondHalf=!secondHalf;
-  periodLabel.textContent = secondHalf ? "2°" : "";
-};
-
-function limitName(el){
-  let t=el.textContent.replace(/\s+/g,'').toUpperCase();
-  if(t.length>4)t=t.slice(0,4);
-  el.textContent=t;
+function pauseClock(){
+    clearInterval(interval);
+    interval=null;
 }
-[teamAName,teamBName].forEach(el=>{
-  el.addEventListener('input',()=>limitName(el));
-  el.addEventListener('blur',()=>limitName(el));
-  el.addEventListener('keydown',e=>{if(e.key==='Enter')e.preventDefault();});
-});
 
-document.getElementById('logoUploadA').onclick=()=>fileInputA.click();
-document.getElementById('logoUploadB').onclick=()=>fileInputB.click();
+function resetClock(){
+    pauseClock();
+    seconds=0;
+    clock.innerText="00:00";
+}
 
-fileInputA.onchange=e=>{
-  const f=e.target.files[0];
-  if(f&&f.type==='image/png'){
-    const r=new FileReader();
-    r.onload=ev=>{logoA.src=ev.target.result;logoA.hidden=false;};
-    r.readAsDataURL(f);
-  }
-};
-fileInputB.onchange=e=>{
-  const f=e.target.files[0];
-  if(f&&f.type==='image/png'){
-    const r=new FileReader();
-    r.onload=ev=>{logoB.src=ev.target.result;logoB.hidden=false;};
-    r.readAsDataURL(f);
-  }
-};
+function toggleSecondTime(){
+    if(secondTime.style.display==="block"){
+        secondTime.style.display="none";
+    }else{
+        secondTime.style.display="block";
+    }
+}
 
-updateClock();
-updateScore();
+function goal(team,val){
+    let el=document.getElementById(team==="A"?"goalA":"goalB");
+    let current=parseInt(el.innerText);
+    let n=Math.max(0,current+val);
+    el.innerText=n;
 
-/* -------------------------------
-      SHORTCUTS AGREGADOS
---------------------------------*/
-document.addEventListener("keydown", e => {
-  if (e.target.isContentEditable) return; // evitar conflicto escribiendo nombres
+    if(val>0){
+        el.classList.remove("goal-animate");
+        void el.offsetWidth;
+        el.classList.add("goal-animate");
+    }
+}
 
-  switch (e.key) {
-    case ".": // iniciar reloj
-      startClock();
-      break;
-    case "¡": // detener reloj
-      stopClock();
-      break;
-    case "+": // gol A
-      goalsA++;
-      updateScore();
-      break;
-    case "-": // quitar gol A
-      goalsA = Math.max(0, goalsA - 1);
-      updateScore();
-      break;
-    case "*": // gol B
-      goalsB++;
-      updateScore();
-      break;
-    case "º": // quitar gol B
-      goalsB = Math.max(0, goalsB - 1);
-      updateScore();
-      break;
-  }
-});
+function uploadLogo(team){
+    let input=document.createElement("input");
+    input.type="file";
+    input.accept="image/*";
+    input.onchange=e=>{
+        let img=document.getElementById(team==="A"?"logoA":"logoB");
+        img.src=URL.createObjectURL(e.target.files[0]);
+    };
+    input.click();
+}
+
+function openModal(team){
+    editingTeam=team;
+    modal.style.display="flex";
+    modalTitle.innerText=`COLOCAR 4 LETRAS DEL EQUIPO ${team}`;
+
+    const logoSrc=document.getElementById(team==="A"?"logoA":"logoB").src;
+    const modalLogo=document.getElementById("modalLogo");
+
+    if(logoSrc){
+        modalLogo.src=logoSrc;
+        modalLogo.style.display="block";
+    }else{
+        modalLogo.style.display="none";
+    }
+}
+
+function saveName(){
+    let val=teamInput.value.toUpperCase().substring(0,4);
+    document.getElementById(editingTeam==="A"?"nameA":"nameB").innerText=val;
+    teamInput.value="";
+    modal.style.display="none";
+}
 </script>
+
 </body>
 </html>
