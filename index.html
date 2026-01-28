@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Marcador Profesional Fútbol - Canal Patagonia Sport</title>
-<link rel="icon" type="image/png" href="CanalPatagoniaSport.png">    
+<title>Marcador Profesional Fútbol</title>
+<link rel="icon" type="image/png" href="CanalPatagoniaSport.png">
 
 <style>
 body{
@@ -13,6 +13,10 @@ body{
     color:white;
     font-family:Arial, Helvetica, sans-serif;
 }
+
+/* ===== TRANSICIONES ===== */
+.fade{transition:opacity .6s ease}
+.hidden{opacity:0;pointer-events:none}
 
 /* ===== MARCADOR ===== */
 .scoreboard-container{
@@ -43,40 +47,20 @@ body{
     object-fit:contain;
 }
 
-.text-team{
-    font-size:48px;
-    font-weight:bold;
-}
+.text-team{font-size:48px;font-weight:bold}
+.separator{font-size:48px;font-weight:bold}
+.clock,.score{font-size:52px;font-weight:bold}
 
-.separator{
-    font-size:48px;
-    font-weight:bold;
+/* ===== ANIMACIÓN GOL ===== */
+@keyframes goalPop{
+    0%{transform:scale(1)}
+    50%{transform:scale(1.4);color:#00ff99}
+    100%{transform:scale(1)}
 }
-
-.clock{
-    font-size:52px;
-    font-weight:bold;
-}
-
-.score{
-    font-size:52px;
-    font-weight:bold;
-}
-
-/* ===== ANIMACIÓN DE GOL ===== */
-@keyframes goalPop {
-    0% { transform: scale(1); color:white; }
-    50% { transform: scale(1.4); color:#00ff99; }
-    100% { transform: scale(1); color:white; }
-}
-
-.goal-animate{
-    animation:goalPop 0.4s ease;
-}
+.goal-animate{animation:goalPop .4s ease}
 
 /* ===== TIEMPOS ===== */
-.second-time-box,
-.extra-time-box{
+.time-box{
     margin-top:10px;
     margin-left:20px;
     padding:10px 18px;
@@ -86,13 +70,6 @@ body{
     font-size:28px;
     font-weight:bold;
     width:fit-content;
-    white-space:nowrap;
-    animation:fadeIn 0.8s ease forwards;
-}
-
-@keyframes fadeIn{
-    from{opacity:0}
-    to{opacity:1}
 }
 
 /* ===== CONTROLES ===== */
@@ -142,77 +119,321 @@ button img{
 /* ===== MODALES ===== */
 .modal{
     position:fixed;
-    top:0;left:0;
-    width:100%;height:100%;
-    background:rgba(0,0,0,0.7);
+    inset:0;
+    background:rgba(0,0,0,.7);
     display:none;
     justify-content:center;
     align-items:center;
 }
-
 .modal-content{
     background:#222;
     padding:30px;
     border-radius:20px;
     text-align:center;
 }
-
-.modal-content h2{
-    font-size:28px;
-}
-
 .modal-content input{
-    margin-top:15px;
-    padding:10px;
     font-size:22px;
+    padding:10px;
     width:220px;
     text-align:center;
 }
+
+/* ===== PENALES (AJUSTADO ARRIBA Y CENTRADO) ===== */
+.penalty-container{
+    position:fixed;
+    top:30px;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    justify-content:center;
+}
+
+.penalty-box{
+    background:linear-gradient(270deg,#00a7ff,#0049ee);
+    padding:25px 35px;
+    border-radius:25px;
+}
+
+.penalty-row{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    margin-bottom:15px;
+}
+
+.penalty-row img{width:60px}
+.penalty-team{font-size:42px;font-weight:bold}
+
+.circles{display:flex;gap:10px}
+.circle{
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    background:#777;
+}
+.circle.green{background:#1abc3c}
+.circle.red{background:#e74c3c}
 </style>
 </head>
 
 <body>
 
-<!-- ===== MARCADOR ===== -->
+<!-- ===== MARCADOR NORMAL ===== -->
+<div id="mainView" class="fade">
 <div class="scoreboard-container">
-    <div>
-        <div class="scoreboard">
-            <div class="clock" id="clock">00:00</div>
-            <div class="separator">|</div>
-
-            <img id="logoA">
-            <div class="text-team" id="nameA">AAAA</div>
-
-            <div class="separator">|</div>
-            <div class="score"><span id="goalA">0</span> - <span id="goalB">0</span></div>
-            <div class="separator">|</div>
-
-            <div class="text-team" id="nameB">BBBB</div>
-            <img id="logoB">
-        </div>
-
-        <div class="second-time-box" id="secondTime">2° Tiempo</div>
-        <div class="extra-time-box" id="extraTimeBox"></div>
-    </div>
+<div>
+<div class="scoreboard">
+<div class="clock" id="clock">00:00</div>
+<div class="separator">|</div>
+<img id="logoA">
+<div class="text-team" id="nameA">AAAA</div>
+<div class="separator">|</div>
+<div class="score"><span id="goalA">0</span> - <span id="goalB">0</span></div>
+<div class="separator">|</div>
+<div class="text-team" id="nameB">BBBB</div>
+<img id="logoB">
 </div>
 
-<!-- ===== CONTROLES ===== -->
-<div class="controls">
+<div id="secondTime" class="time-box">2° Tiempo</div>
+<div id="extraTimeBox" class="time-box"></div>
+</div>
+</div>
+</div>
 
-    <div class="control-section">
-        <button class="green" onclick="startClock()">Iniciar Reloj</button>
-        <button class="yellow" onclick="pauseClock()">Pausar Reloj</button>
-        <button class="red" onclick="resetClock()">Reiniciar Reloj</button>
-        <button class="blue" onclick="toggleSecondTime()">2° Tiempo</button>
-        <button class="blue" onclick="openExtraModal()">Minutos Extras</button>
-    </div>
+<!-- ===== PENALES ===== -->
+<div id="penaltyView" class="fade hidden">
+<div class="penalty-container">
+<div class="penalty-box">
 
-    <div class="control-section">
-        <button class="white" onclick="uploadLogo('A')">Logo Equipo A</button>
-        <button class="black" onclick="openModal('A')">Nombre Equipo A</button>
-        <button class="green" onclick="goal('A',1)">Gol Equipo A <img id="btnLogoA1"></button>
-        <button class="red" onclick="goal('A',-1)">Quitar Gol Equipo A <img id="btnLogoA2"></button>
-    </div>
+<div class="penalty-row">
+<img id="pLogoA">
+<div class="penalty-team" id="pNameA">AAAA</div>
+<div class="separator">|</div>
+<div class="circles" id="circlesA"></div>
+</div>
 
-    <div class="control-section">
-        <button class="white" onclick="uploadLogo(
+<div class="penalty-row">
+<img id="pLogoB">
+<div class="penalty-team" id="pNameB">BBBB</div>
+<div class="separator">|</div>
+<div class="circles" id="circlesB"></div>
+</div>
+
+</div>
+</div>
+</div>
+
+<!-- ===== CONTROLES MARCADOR ===== -->
+<div id="controlsMain" class="controls fade">
+
+<div class="control-section">
+<button class="green" onclick="startClock()">Iniciar Reloj</button>
+<button class="yellow" onclick="pauseClock()">Pausar Reloj</button>
+<button class="red" onclick="resetClock()">Reiniciar Reloj</button>
+<button class="blue" onclick="toggleSecondTime()">2° Tiempo</button>
+<button class="blue" onclick="openExtraModal()">Minutos Extras</button>
+</div>
+
+<div class="control-section">
+<button class="white" onclick="uploadLogo('A')">Logo Equipo A</button>
+<button class="black" onclick="openModal('A')">Nombre Equipo A</button>
+<button class="green" onclick="goal('A',1)">Gol A <img id="btnLogoA1"></button>
+<button class="red" onclick="goal('A',-1)">Quitar Gol A <img id="btnLogoA2"></button>
+<button class="blue" onclick="toggleMain()">Mostrar / Ocultar</button>
+</div>
+
+<div class="control-section">
+<button class="white" onclick="uploadLogo('B')">Logo Equipo B</button>
+<button class="black" onclick="openModal('B')">Nombre Equipo B</button>
+<button class="green" onclick="goal('B',1)">Gol B <img id="btnLogoB1"></button>
+<button class="red" onclick="goal('B',-1)">Quitar Gol B <img id="btnLogoB2"></button>
+<button class="blue" onclick="openPenalties()">Penales</button>
+</div>
+
+</div>
+
+<!-- ===== CONTROLES PENALES ===== -->
+<div id="controlsPenalties" class="controls fade hidden">
+
+<div class="control-section">
+<button class="green" onclick="penalty('A',0,'goal')">Gol A 1</button>
+<button class="green" onclick="penalty('A',1,'goal')">Gol A 2</button>
+<button class="green" onclick="penalty('A',2,'goal')">Gol A 3</button>
+<button class="green" onclick="penalty('A',3,'goal')">Gol A 4</button>
+<button class="green" onclick="penalty('A',4,'goal')">Gol A 5</button>
+</div>
+
+<div class="control-section">
+<button class="red" onclick="penalty('A',0,'miss')">Fallo A 1</button>
+<button class="red" onclick="penalty('A',1,'miss')">Fallo A 2</button>
+<button class="red" onclick="penalty('A',2,'miss')">Fallo A 3</button>
+<button class="red" onclick="penalty('A',3,'miss')">Fallo A 4</button>
+<button class="red" onclick="penalty('A',4,'miss')">Fallo A 5</button>
+</div>
+
+<div class="control-section">
+<button class="green" onclick="penalty('B',0,'goal')">Gol B 1</button>
+<button class="green" onclick="penalty('B',1,'goal')">Gol B 2</button>
+<button class="green" onclick="penalty('B',2,'goal')">Gol B 3</button>
+<button class="green" onclick="penalty('B',3,'goal')">Gol B 4</button>
+<button class="green" onclick="penalty('B',4,'goal')">Gol B 5</button>
+</div>
+
+<div class="control-section">
+<button class="red" onclick="penalty('B',0,'miss')">Fallo B 1</button>
+<button class="red" onclick="penalty('B',1,'miss')">Fallo B 2</button>
+<button class="red" onclick="penalty('B',2,'miss')">Fallo B 3</button>
+<button class="red" onclick="penalty('B',3,'miss')">Fallo B 4</button>
+<button class="red" onclick="penalty('B',4,'miss')">Fallo B 5</button>
+<button class="blue" onclick="backToScoreboard()">Volver al marcador</button>
+</div>
+
+</div>
+
+<!-- ===== MODALES ===== -->
+<div class="modal" id="nameModal">
+<div class="modal-content">
+<h2 id="modalTitle"></h2>
+<img id="modalLogo" style="width:100px;margin:10px;display:none">
+<input id="teamInput" maxlength="4">
+<br><br>
+<button class="blue" onclick="saveName()">Aceptar</button>
+</div>
+</div>
+
+<div class="modal" id="extraModal">
+<div class="modal-content">
+<h2>Cuánto tiempo Extra</h2>
+<input id="extraInput" type="number">
+<br><br>
+<button class="blue" onclick="saveExtra()">Aceptar</button>
+</div>
+</div>
+
+<script>
+let seconds=0,interval=null,editingTeam="A";
+
+/* ELEMENTOS */
+const secondTime=document.getElementById("secondTime");
+const extraTimeBox=document.getElementById("extraTimeBox");
+const extraModal=document.getElementById("extraModal");
+const nameModal=document.getElementById("nameModal");
+const modalTitle=document.getElementById("modalTitle");
+const modalLogo=document.getElementById("modalLogo");
+const teamInput=document.getElementById("teamInput");
+const mainView=document.getElementById("mainView");
+const penaltyView=document.getElementById("penaltyView");
+const controlsMain=document.getElementById("controlsMain");
+const controlsPenalties=document.getElementById("controlsPenalties");
+
+/* RELOJ */
+function startClock(){
+if(interval)return;
+interval=setInterval(()=>{
+seconds++;
+clock.innerText=
+String(Math.floor(seconds/60)).padStart(2,"0")+":"+
+String(seconds%60).padStart(2,"0");
+},1000);
+}
+function pauseClock(){clearInterval(interval);interval=null}
+function resetClock(){pauseClock();seconds=0;clock.innerText="00:00"}
+
+/* TIEMPOS */
+function toggleSecondTime(){
+secondTime.style.display=
+secondTime.style.display==="block"?"none":"block";
+}
+
+/* GOLES */
+function goal(team,val){
+let el=document.getElementById(team==="A"?"goalA":"goalB");
+let n=Math.max(0,parseInt(el.innerText)+val);
+el.innerText=n;
+if(val>0){
+el.classList.remove("goal-animate");
+void el.offsetWidth;
+el.classList.add("goal-animate");
+}
+}
+
+/* LOGOS */
+function uploadLogo(team){
+let i=document.createElement("input");
+i.type="file";i.accept="image/*";
+i.onchange=e=>{
+let src=URL.createObjectURL(e.target.files[0]);
+document.getElementById(team==="A"?"logoA":"logoB").src=src;
+document.getElementById("btnLogo"+team+"1").src=src;
+document.getElementById("btnLogo"+team+"2").src=src;
+document.getElementById(team==="A"?"pLogoA":"pLogoB").src=src;
+};
+i.click();
+}
+
+/* NOMBRES */
+function openModal(team){
+editingTeam=team;
+nameModal.style.display="flex";
+modalTitle.innerText="COLOCAR 4 LETRAS DEL EQUIPO "+team;
+let src=document.getElementById(team==="A"?"logoA":"logoB").src;
+if(src){modalLogo.src=src;modalLogo.style.display="block";}
+else modalLogo.style.display="none";
+}
+
+function saveName(){
+let v=teamInput.value.toUpperCase().slice(0,4);
+document.getElementById(editingTeam==="A"?"nameA":"nameB").innerText=v;
+document.getElementById(editingTeam==="A"?"pNameA":"pNameB").innerText=v;
+teamInput.value="";
+nameModal.style.display="none";
+}
+
+/* EXTRAS */
+function openExtraModal(){extraModal.style.display="flex"}
+function saveExtra(){
+extraTimeBox.innerText="+"+extraInput.value;
+extraTimeBox.style.display="block";
+extraInput.value="";
+extraModal.style.display="none";
+}
+
+/* TOGGLE MARCADOR */
+function toggleMain(){
+mainView.classList.toggle("hidden");
+}
+
+/* PENALES */
+function openPenalties(){
+mainView.classList.add("hidden");
+penaltyView.classList.remove("hidden");
+controlsMain.classList.add("hidden");
+controlsPenalties.classList.remove("hidden");
+initCircles();
+}
+
+function initCircles(){
+circlesA.innerHTML="";
+circlesB.innerHTML="";
+for(let i=0;i<5;i++){
+circlesA.innerHTML+='<div class="circle"></div>';
+circlesB.innerHTML+='<div class="circle"></div>';
+}
+}
+
+function penalty(team,index,type){
+let circles = team==="A"?circlesA.children:circlesB.children;
+circles[index].className="circle "+(type==="goal"?"green":"red");
+}
+
+/* VOLVER */
+function backToScoreboard(){
+penaltyView.classList.add("hidden");
+mainView.classList.remove("hidden");
+controlsPenalties.classList.add("hidden");
+controlsMain.classList.remove("hidden");
+}
+</script>
+
+</body>
+</html>
