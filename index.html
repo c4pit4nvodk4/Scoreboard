@@ -51,13 +51,28 @@ body{
 .separator{font-size:48px;font-weight:bold}
 .clock,.score{font-size:52px;font-weight:bold}
 
-/* ===== ANIMACIÓN GOL ===== */
-@keyframes goalPop{
-    0%{transform:scale(1)}
-    50%{transform:scale(1.4);color:#00ff99}
-    100%{transform:scale(1)}
+/* ===== ANIMACIÓN GOL (ZOOM + COLOR) ===== */
+@keyframes goalPop {
+    0% { transform: scale(1); color: white; }
+    30% { transform: scale(1.8); color: #00ff99; text-shadow: 0 0 20px #00ff99; }
+    100% { transform: scale(1); color: white; }
 }
-.goal-animate{animation:goalPop .4s ease}
+
+.goal-animate {
+    display: inline-block; /* Necesario para que el transform funcione correctamente */
+    animation: goalPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* ===== ANIMACIÓN CÍRCULOS PENALES ===== */
+@keyframes penaltyPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.5); box-shadow: 0 0 15px white; }
+    100% { transform: scale(1); }
+}
+
+.penalty-animate {
+    animation: penaltyPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
 
 /* ===== TIEMPOS ===== */
 .time-box{
@@ -257,33 +272,38 @@ button img{
 
 <div class="control-section">
 <button class="green" onclick="penalty('A',0,'goal')">Gol A 1</button>
-<button class="green" onclick="penalty('A',1,'goal')">Gol A 2</button>
-<button class="green" onclick="penalty('A',2,'goal')">Gol A 3</button>
-<button class="green" onclick="penalty('A',3,'goal')">Gol A 4</button>
-<button class="green" onclick="penalty('A',4,'goal')">Gol A 5</button>
-</div>
-
-<div class="control-section">
 <button class="red" onclick="penalty('A',0,'miss')">Fallo A 1</button>
-<button class="red" onclick="penalty('A',1,'miss')">Fallo A 2</button>
-<button class="red" onclick="penalty('A',2,'miss')">Fallo A 3</button>
-<button class="red" onclick="penalty('A',3,'miss')">Fallo A 4</button>
-<button class="red" onclick="penalty('A',4,'miss')">Fallo A 5</button>
-</div>
-
-<div class="control-section">
 <button class="green" onclick="penalty('B',0,'goal')">Gol B 1</button>
-<button class="green" onclick="penalty('B',1,'goal')">Gol B 2</button>
-<button class="green" onclick="penalty('B',2,'goal')">Gol B 3</button>
-<button class="green" onclick="penalty('B',3,'goal')">Gol B 4</button>
-<button class="green" onclick="penalty('B',4,'goal')">Gol B 5</button>
+<button class="red" onclick="penalty('B',0,'miss')">Fallo B 1</button>
+<button class="yellow" onclick="initCircles()">Reiniciar Penales</button>
 </div>
 
 <div class="control-section">
-<button class="red" onclick="penalty('B',0,'miss')">Fallo B 1</button>
+<button class="green" onclick="penalty('A',1,'goal')">Gol A 2</button>
+<button class="red" onclick="penalty('A',1,'miss')">Fallo A 2</button>
+<button class="green" onclick="penalty('B',1,'goal')">Gol B 2</button>
 <button class="red" onclick="penalty('B',1,'miss')">Fallo B 2</button>
+
+</div>
+
+<div class="control-section">
+<button class="green" onclick="penalty('A',2,'goal')">Gol A 3</button>
+<button class="red" onclick="penalty('A',2,'miss')">Fallo A 3</button>
+<button class="green" onclick="penalty('B',2,'goal')">Gol B 3</button>
 <button class="red" onclick="penalty('B',2,'miss')">Fallo B 3</button>
+</div>
+
+<div class="control-section">
+<button class="green" onclick="penalty('A',3,'goal')">Gol A 4</button>
+<button class="red" onclick="penalty('A',3,'miss')">Fallo A 4</button>
+<button class="green" onclick="penalty('B',3,'goal')">Gol B 4</button>
 <button class="red" onclick="penalty('B',3,'miss')">Fallo B 4</button>
+</div>
+
+<div class="control-section">
+<button class="green" onclick="penalty('A',4,'goal')">Gol A 5</button>
+<button class="red" onclick="penalty('A',4,'miss')">Fallo A 5</button>
+<button class="green" onclick="penalty('B',4,'goal')">Gol B 5</button>
 <button class="red" onclick="penalty('B',4,'miss')">Fallo B 5</button>
 <button class="blue" onclick="backToScoreboard()">Volver al marcador</button>
 </div>
@@ -433,6 +453,24 @@ mainView.classList.remove("hidden");
 controlsPenalties.classList.add("hidden");
 controlsMain.classList.remove("hidden");
 }
+
+function penalty(team, index, type) {
+    let container = (team === "A") ? document.getElementById("circlesA") : document.getElementById("circlesB");
+    let circle = container.children[index];
+
+    if (circle) {
+        // Asignamos el color según el resultado
+        circle.className = "circle " + (type === "goal" ? "green" : "red");
+
+        // Quitamos la animación si ya existía para reiniciarla
+        circle.classList.remove("penalty-animate");
+        void circle.offsetWidth; // Truco de "reflow" para que el navegador reinicie la animación
+        
+        // Aplicamos el zoom
+        circle.classList.add("penalty-animate");
+    }
+}
+
 </script>
 
 </body>
