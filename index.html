@@ -7,6 +7,14 @@
 <link rel="icon" type="image/png" href="CanalPatagoniaSport.png">
 
 <style>
+    
+.btnPLogoA, .btnPLogoB {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    display: none; /* Se ocultan hasta que subas una imagen */
+}
+
 body{
     margin:0;
     background:#111;
@@ -271,40 +279,40 @@ button img{
 <div id="controlsPenalties" class="controls fade hidden">
 
 <div class="control-section">
-<button class="green" onclick="penalty('A',0,'goal')">Gol A 1</button>
-<button class="red" onclick="penalty('A',0,'miss')">Fallo A 1</button>
-<button class="green" onclick="penalty('B',0,'goal')">Gol B 1</button>
-<button class="red" onclick="penalty('B',0,'miss')">Fallo B 1</button>
+<button class="green" onclick="penalty('A',0,'goal')">Gol <img class="btnPLogoA"> 1</button>
+<button class="red" onclick="penalty('A',0,'miss')">Fallo <img class="btnPLogoA"> 1</button>
+<button class="green" onclick="penalty('B',0,'goal')">Gol <img class="btnPLogoB"> 1</button>
+<button class="red" onclick="penalty('B',0,'miss')">Fallo <img class="btnPLogoB"> 1</button>
 <button class="yellow" onclick="initCircles()">Reiniciar Penales</button>
 </div>
 
 <div class="control-section">
-<button class="green" onclick="penalty('A',1,'goal')">Gol A 2</button>
-<button class="red" onclick="penalty('A',1,'miss')">Fallo A 2</button>
-<button class="green" onclick="penalty('B',1,'goal')">Gol B 2</button>
-<button class="red" onclick="penalty('B',1,'miss')">Fallo B 2</button>
+<button class="green" onclick="penalty('A',1,'goal')">Gol <img class="btnPLogoA"> 2</button>
+<button class="red" onclick="penalty('A',1,'miss')">Fallo <img class="btnPLogoA"> 2</button>
+<button class="green" onclick="penalty('B',1,'goal')">Gol <img class="btnPLogoB"> 2</button>
+<button class="red" onclick="penalty('B',1,'miss')">Fallo <img class="btnPLogoB"> 2</button>
 
 </div>
 
 <div class="control-section">
-<button class="green" onclick="penalty('A',2,'goal')">Gol A 3</button>
-<button class="red" onclick="penalty('A',2,'miss')">Fallo A 3</button>
-<button class="green" onclick="penalty('B',2,'goal')">Gol B 3</button>
-<button class="red" onclick="penalty('B',2,'miss')">Fallo B 3</button>
+<button class="green" onclick="penalty('A',2,'goal')">Gol <img class="btnPLogoA"> 3</button>
+<button class="red" onclick="penalty('A',2,'miss')">Fallo <img class="btnPLogoA"> 3</button>
+<button class="green" onclick="penalty('B',2,'goal')">Gol <img class="btnPLogoB"> 3</button>
+<button class="red" onclick="penalty('B',2,'miss')">Fallo <img class="btnPLogoB"> 3</button>
 </div>
 
 <div class="control-section">
-<button class="green" onclick="penalty('A',3,'goal')">Gol A 4</button>
-<button class="red" onclick="penalty('A',3,'miss')">Fallo A 4</button>
-<button class="green" onclick="penalty('B',3,'goal')">Gol B 4</button>
-<button class="red" onclick="penalty('B',3,'miss')">Fallo B 4</button>
+<button class="green" onclick="penalty('A',3,'goal')">Gol <img class="btnPLogoA"> 4</button>
+<button class="red" onclick="penalty('A',3,'miss')">Fallo <img class="btnPLogoA"> 4</button>
+<button class="green" onclick="penalty('B',3,'goal')">Gol <img class="btnPLogoB"> 4</button>
+<button class="red" onclick="penalty('B',3,'miss')">Fallo <img class="btnPLogoB"> 4</button>
 </div>
 
 <div class="control-section">
-<button class="green" onclick="penalty('A',4,'goal')">Gol A 5</button>
-<button class="red" onclick="penalty('A',4,'miss')">Fallo A 5</button>
-<button class="green" onclick="penalty('B',4,'goal')">Gol B 5</button>
-<button class="red" onclick="penalty('B',4,'miss')">Fallo B 5</button>
+<button class="green" onclick="penalty('A',4,'goal')">Gol <img class="btnPLogoA"> 5</button>
+<button class="red" onclick="penalty('A',4,'miss')">Fallo <img class="btnPLogoA"> 5</button>
+<button class="green" onclick="penalty('B',4,'goal')">Gol <img class="btnPLogoB"> 5</button>
+<button class="red" onclick="penalty('B',4,'miss')">Fallo <img class="btnPLogoB"> 5</button>
 <button class="blue" onclick="backToScoreboard()">Volver al marcador</button>
 </div>
 
@@ -379,16 +387,27 @@ el.classList.add("goal-animate");
 
 /* LOGOS */
 function uploadLogo(team){
-let i=document.createElement("input");
-i.type="file";i.accept="image/*";
-i.onchange=e=>{
-let src=URL.createObjectURL(e.target.files[0]);
-document.getElementById(team==="A"?"logoA":"logoB").src=src;
-document.getElementById("btnLogo"+team+"1").src=src;
-document.getElementById("btnLogo"+team+"2").src=src;
-document.getElementById(team==="A"?"pLogoA":"pLogoB").src=src;
-};
-i.click();
+    let i=document.createElement("input");
+    i.type="file"; i.accept="image/*";
+    i.onchange=e=>{
+        let src=URL.createObjectURL(e.target.files[0]);
+        
+        // Logos en el marcador principal
+        document.getElementById(team==="A"?"logoA":"logoB").src=src;
+        document.getElementById("btnLogo"+team+"1").src=src;
+        document.getElementById("btnLogo"+team+"2").src=src;
+        
+        // Logos en la vista de penales
+        document.getElementById(team==="A"?"pLogoA":"pLogoB").src=src;
+        
+        // Actualizar TODOS los mini logos de los botones de penales
+        let miniLogos = document.querySelectorAll(team==="A" ? ".btnPLogoA" : ".btnPLogoB");
+        miniLogos.forEach(img => {
+            img.src = src;
+            img.style.display = "inline-block"; // Asegura que se vean
+        });
+    };
+    i.click();
 }
 
 /* NOMBRES */
